@@ -5,8 +5,7 @@ Use this quick hack in Notepad++ to regex replace M3U(8) files to work on DLNA.
 This cleans the extended info fields (#EXTINF) as well as the first line (#EXTM3U) out of the files.
 It seems specifically Synology DLNA Media Server cannot handle these (usually standard and in-spec) lines for M3U(8) files and hence will display "no media found" (even though the links are indeed correct and relative)
 
-
-(^#EXTM3U\r?\n)|(^#EXTINF:.{1,}\r?\n)
+    (^#EXTM3U\r?\n)|(^#EXTINF:.{1,}\r?\n)
 
 Since we are leaving the "Replace" area completely empty, this should reliably kill those lines and delete them in a "Search and Replace" Operation. Also should work in "Find and Replace in files…" function found in the "Find and Replace" menu in UI, ie. it works on a folder of however many files you feed it.
 
@@ -16,9 +15,9 @@ Something called "relative path compute" is necessary to make M3U(8) files excha
 
 Relative paths will circumvent the specific issues that you get when using "absolute" paths like "\\MyServer\MyShare\The%20Music%20Folder\…".
 
-Some devices and/or OSes can't cope with this type of pathing. Linux and Android are specifically picky and likely won't read these - or they might, depending on how they are configured. You'll find out only if you can test with two different end devices in your specific environment.
+Some devices and/or OSes can't cope with this type of path. Linux and Android are specifically picky and likely won't read these - or they might, depending on how they are configured. You'll find out only if you can test with two different end devices in your specific environment.
 
-There's more. More path operations are needed if you have ASCII / URL replacements like "%20" for spaces. You can leave those in, they might work… then, they might not work on some devices. It's complicated. You have to test what works in your setup, what doesn't. Mine for example cannot abide %20 and any other ASCII URL String replacement for non-URL characters that would break reading a URL. So someone created this standard, which originated from web browswers having limited capabilities when reading URLs - in an ever more complex world where UTM tags are invading your web privacy and make links ever more complex.
+There's more. More path operations are needed if you have ASCII / URL replacements like "%20" for spaces. You can leave those in, they might work… then, they might not work on some devices. It's complicated. You have to test what works in your setup, what doesn't. Mine for example cannot abide %20 and any other ASCII URL String replacement for non-URL characters that would break reading a URL. So someone created this standard, which originated from web browsers having limited capabilities when reading URLs - in an ever more complex world where UTM tags are invading your web privacy and make links ever more complex.
 
 Even though, theoretically, the above sample link is the correct way to reflect spaces in a URL or URI/UNC path, it will break reading that link on some DLNA environments, depending likely on how the vendor configured their system. 
 
@@ -27,7 +26,7 @@ A URL cannot contain any spaces and other "forbidden" characters by definition, 
 In short:
 Synology DLNA for example seems to replace the spaces when seeking files, hence a %20 is literally interpreted - this is my assumption, since file links containing these do not natively work on Synology Media Server. Whereas replacing the links with "technically incorrect" relative links magically works. Don't ask me why, ask Synology.
 
-To make matters complex, relative pathing also requires you to exactly pinpoint the location of a DLNA playlist to find the actual media file. The "relative" part is important.
+To make matters complex, using a relative path vs. a "absolute path" also requires you to exactly pinpoint the location of a DLNA playlist to find the actual media file. The "relative" part is important.
 
 Observe:
 
@@ -39,60 +38,46 @@ Then, we have the matter of how any given player or playlist creator software (w
 
 Check your playlist file with an external text editor - Notepad++ is recommended so you can actually follow this tutorial.
 
-How does relative pathing actually work?
+How do relative paths actually work?
 
 Sample Structure:
-
-_PLAYLISTS
-
- └ myplaylist.m3u
-
-_Albums
-
-└ \[folders with albums]
-
-    └MySampleAlbum
+    
+    _PLAYLISTS
+     └myplaylist.m3u
+    _Albums
+      └\[folders with albums]
+      └MySampleAlbum
       └MySample.mp3
-
-_REMIXES
-
-└ [folders with remix type albums or collections]
-
-_ETC
-
-└ [other stuff]
-
-MoreFolders
-
-└ \ [more folders]
-
-      └ [more stuff]
-
-└ [folder Full of single mp3files, for messy people]
-
+    _REMIXES
+      └ [folders with remix type albums or collections]
+    _ETC
+      └ [subfolders with other stuff]
+    MoreFolders
+     └\[even more folders within]
+        └[more stuff]
+        └[a folder Full of single mp3files, for messy people]
 
 Then, relative links work like this:
-..\ one folder up from playlist folder 
+    ..\ one folder up from playlist folder
 
-To access the _Albums 
-..\_Albums\[whatever you want to reach within this]
+To access the _Albums
+    ..\_Albums\[whatever you want to reach within this]
 
 A note: this relative path will go UP one folder from current folder (assuming you are in _PLAYLISTS for ex.) then go into _Albums folder. This will fail if there is no such folder, so replace with your folder names.
 
 So, to access "MySampleAlbum" and within that "MySample.mp3":
-..\_Albums\MySampleAlbum\MySample.mp3
+    ..\_Albums\MySampleAlbum\MySample.mp3
 
-
-If your playlist is in the SAME folder structure as the music you're trying to reach, use 
-.\ (one dot instead of two)
+If your playlist is in the SAME folder structure as the music you're trying to reach, use
+    .\ (one dot instead of two)
 
 This would work for a structure like this (if you like tidy folders, you won't use it I'm sure)
 
-[a list of playlists.m3u]
-\MUSIC
+    [a list of playlists.m3u]
+     \MUSIC
 
 Then you'd access the \MUSIC folder like this:
-.\MUSIC\[your further path to file(s)]
+    .\MUSIC\[your further path to file(s)]
 
 Hope that helps.
 ![image](https://github.com/Rincemac/LifeHax/assets/24958093/9bf3e1fd-620f-48c8-bb31-c019f056810d)
