@@ -42,20 +42,33 @@ Check your playlist file with an external text editor - Notepad++ is recommended
 How does relative pathing actually work?
 
 Sample Structure:
+
 _PLAYLISTS
+
  └ myplaylist.m3u
+
 _Albums
+
 └ \[folders with albums]
+
     └MySampleAlbum
       └MySample.mp3
+
 _REMIXES
+
 └ [folders with remix type albums or collections]
+
 _ETC
+
 └ [other stuff]
+
 MoreFolders
+
 └ \ [more folders]
+
       └ [more stuff]
-└ [mp3 files]
+
+└ [folder Full of single mp3files, for messy people]
 
 
 Then, relative links work like this:
